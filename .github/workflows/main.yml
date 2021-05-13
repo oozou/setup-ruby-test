@@ -1,0 +1,21 @@
+name: Setup Ruby Test
+on:
+  - push
+jobs:
+  Tests:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout hyper project
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - name: Set ruby version
+        run: echo "::set-output name=version::$(cat .ruby-version)"
+        id: ruby-version
+      - uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "${{ steps.ruby-version.outputs.version }}"
+          bundler-cache: true
+      - name: Run rubocop
+        run: bundle exec rubocop
+
